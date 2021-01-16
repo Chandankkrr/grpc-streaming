@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "MapboxStreaming";
+
+package location_data;
+
+service LocationData {
+  rpc GetLocationData (GetLocationRequest) returns (stream GetLocationResponse);
+  rpc GetAllLocationData (GetAllLocationsRequest) returns (stream GetAllLocationsResponse);
+}
+
+message GetLocationRequest {
+  int32 dataLimit = 1;
+}
+
+message GetLocationResponse {
+  int32 latitudeE7 = 1;
+  int32 longitudeE7 = 2;
+}
+
+message GetAllLocationsRequest {
+}
+
+message GetAllLocationsResponse {
+  int32 latitudeE7 = 1;
+  int32 longitudeE7 = 2;
+}
