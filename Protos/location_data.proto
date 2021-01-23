@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "MapboxStreaming";
+option csharp_namespace = "GPRCStreaming";
 
 package location_data;
 

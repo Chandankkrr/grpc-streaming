@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Grpc.Core;
 
-namespace MapboxStreaming
+namespace GPRCStreaming
 {
     public class GreeterService : Greeter.GreeterBase
     {

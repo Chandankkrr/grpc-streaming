@@ -3,7 +3,7 @@ using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System.IO;
 
-namespace MapboxStreaming
+namespace GPRCStreaming
 {
     public class LocationService : LocationData.LocationDataBase
     {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace MapboxStreaming
+namespace GPRCStreaming
 {
     public class FileReader
     {
@@ -19,7 +19,7 @@ namespace MapboxStreaming
         public async Task<RootLocation> ReadAllLinesAsync(string filePath)
         {
             _logger.LogInformation($"Reading contents of {filePath} file");
-            
+
             if (_locationData == null)
             {
                 var locationDataText = await File.ReadAllTextAsync(filePath);
