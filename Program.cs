@@ -20,6 +20,9 @@ namespace MapboxStreaming
                     // Setup a HTTP/2 endpoint without TLS.
                     options.ListenLocalhost(5001, o => o.Protocols =
                         HttpProtocols.Http2);
+
+                    options.ListenLocalhost(5002, o => o.Protocols =
+                        HttpProtocols.Http1);
                 });
 
                 webBuilder.UseStartup<Startup>();
