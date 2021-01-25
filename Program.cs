@@ -1,6 +1,9 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 
 namespace GPRCStreaming
 {
@@ -13,15 +16,30 @@ namespace GPRCStreaming
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .UseSerilog((context, configuration) =>
+            {
+                configuration.Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(context.Configuration["ElasticConfiguration:Uri"]))
+                {
+                    IndexFormat = $"{context.Configuration["ApplicationName"]}-{DateTime.UtcNow:yyyy-MM}",
+                    AutoRegisterTemplate = true,
+                    NumberOfShards = 2,
+                    NumberOfReplicas = 1
+
+                })
+                .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
+                .ReadFrom.Configuration(context.Configuration);
+            })
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.ConfigureKestrel(options =>
                 {
                     // Setup a HTTP/2 endpoint without TLS.
-                    options.ListenLocalhost(5001, o => o.Protocols =
+                    options.ListenAnyIP(80, o => o.Protocols =
                         HttpProtocols.Http2);
 
-                    options.ListenLocalhost(5002, o => o.Protocols =
+                    options.ListenAnyIP(8080, o => o.Protocols =
                         HttpProtocols.Http1);
                 });
 

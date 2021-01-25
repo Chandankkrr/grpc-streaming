@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using System;
 
 namespace GPRCStreaming
 {
@@ -18,22 +19,33 @@ namespace GPRCStreaming
 
         public override async Task GetLocationData(GetLocationRequest request, IServerStreamWriter<GetLocationResponse> responseStream, ServerCallContext context)
         {
-            var locationData = await ReadLocationData();
-
-            for (var i = 0; i < request.DataLimit - 1; i++)
+            try
             {
-                var item = locationData.Locations[i];
+                _logger.LogInformation("Incoming request for GetLocationData");
 
-                await responseStream.WriteAsync(new GetLocationResponse
+                var locationData = await ReadLocationData();
+
+                for (var i = 0; i < request.DataLimit - 1; i++)
                 {
-                    LatitudeE7 = item.LatitudeE7,
-                    LongitudeE7 = item.LongitudeE7
-                });
+                    var item = locationData.Locations[i];
+
+                    await responseStream.WriteAsync(new GetLocationResponse
+                    {
+                        LatitudeE7 = item.LatitudeE7,
+                        LongitudeE7 = item.LongitudeE7
+                    });
+                }
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "Error occurred");
             }
         }
 
         public override async Task GetAllLocationData(GetAllLocationsRequest request, IServerStreamWriter<GetAllLocationsResponse> responseStream, ServerCallContext context)
         {
+            _logger.LogInformation("Incoming request for GetAllLocationData");
+
             var locationData = await ReadLocationData();
             var locations = locationData.Locations;
 
