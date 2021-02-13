@@ -25,7 +25,7 @@ namespace GPRCStreaming
 
                 var locationData = await ReadLocationData();
 
-                for (var i = 0; i < request.DataLimit - 1; i++)
+                for (var i = 0; i <= request.DataLimit - 1; i++)
                 {
                     var item = locationData.Locations[i];
 

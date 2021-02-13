@@ -18,15 +18,15 @@ namespace GPRCStreaming
 
         public async Task<RootLocation> ReadAllLinesAsync(string filePath)
         {
-            _logger.LogInformation($"Reading contents of {filePath} file");
-
             if (_locationData == null)
             {
+                _logger.LogInformation($"Reading contents of {filePath} file");
+
                 var locationDataText = await File.ReadAllTextAsync(filePath);
                 _locationData = JsonConvert.DeserializeObject<RootLocation>(locationDataText);
-            }
 
-            _logger.LogInformation($"{_locationData.Locations.Count} records found");
+                _logger.LogInformation($"{_locationData.Locations.Count} records found");
+            }
 
             return _locationData;
         }

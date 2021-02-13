@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace GPRCStreaming
 {
-    public record Location
+    public class Location
     {
         [JsonProperty("latitudeE7")]
         public int LatitudeE7 { get; set; }
