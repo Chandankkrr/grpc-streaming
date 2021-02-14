@@ -23,9 +23,12 @@ namespace GPRCStreaming
             {
                 _logger.LogInformation("Incoming request for GetLocationData");
 
-                var locationData = await ReadLocationData();
+                var locationData = await GetLocationData();
+                var locationDataCount = locationData.Locations.Count;
 
-                for (var i = 0; i <= request.DataLimit - 1; i++)
+                var dataLimit = request.DataLimit > locationDataCount ? locationDataCount : request.DataLimit;
+
+                for (var i = 0; i <= dataLimit - 1; i++)
                 {
                     var item = locationData.Locations[i];
 
@@ -39,6 +42,7 @@ namespace GPRCStreaming
             catch (Exception exception)
             {
                 _logger.LogError(exception, "Error occurred");
+                throw;
             }
         }
 
@@ -46,7 +50,7 @@ namespace GPRCStreaming
         {
             _logger.LogInformation("Incoming request for GetAllLocationData");
 
-            var locationData = await ReadLocationData();
+            var locationData = await GetLocationData();
             var locations = locationData.Locations;
 
             foreach (var item in locations)
@@ -59,7 +63,7 @@ namespace GPRCStreaming
             }
         }
 
-        private async Task<RootLocation> ReadLocationData()
+        private async Task<RootLocation> GetLocationData()
         {
             var currentDirectory = Directory.GetCurrentDirectory();
             var filePath = $"{currentDirectory}/Data/Location_History.json";

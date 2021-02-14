@@ -30,6 +30,5 @@ namespace GPRCStreaming
 
             return _locationData;
         }
-
     }
 }
