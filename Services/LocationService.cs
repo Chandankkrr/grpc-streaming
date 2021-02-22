@@ -8,8 +8,8 @@ namespace GPRCStreaming
 {
     public class LocationService : LocationData.LocationDataBase
     {
-        public readonly FileReader _fileReader;
-        public readonly ILogger<LocationService> _logger;
+        private readonly FileReader _fileReader;
+        private readonly ILogger<LocationService> _logger;
 
         public LocationService(FileReader fileReader, ILogger<LocationService> logger)
         {
@@ -17,7 +17,7 @@ namespace GPRCStreaming
             _logger = logger;
         }
 
-        public override async Task GetLocationData(GetLocationRequest request, IServerStreamWriter<GetLocationResponse> responseStream, ServerCallContext context)
+        public override async Task GetLocations(GetLocationsRequest request, IServerStreamWriter<GetLocationsResponse> responseStream, ServerCallContext context)
         {
             try
             {
@@ -27,12 +27,13 @@ namespace GPRCStreaming
                 var locationDataCount = locationData.Locations.Count;
 
                 var dataLimit = request.DataLimit > locationDataCount ? locationDataCount : request.DataLimit;
+                var random = new Random();
 
                 for (var i = 0; i <= dataLimit - 1; i++)
                 {
                     var item = locationData.Locations[i];
 
-                    await responseStream.WriteAsync(new GetLocationResponse
+                    await responseStream.WriteAsync(new GetLocationsResponse
                     {
                         LatitudeE7 = item.LatitudeE7,
                         LongitudeE7 = item.LongitudeE7
@@ -46,7 +47,7 @@ namespace GPRCStreaming
             }
         }
 
-        public override async Task GetAllLocationData(GetAllLocationsRequest request, IServerStreamWriter<GetAllLocationsResponse> responseStream, ServerCallContext context)
+        public override async Task GetAllLocations(GetAllLocationsRequest request, IServerStreamWriter<GetAllLocationsResponse> responseStream, ServerCallContext context)
         {
             _logger.LogInformation("Incoming request for GetAllLocationData");
 

@@ -5,15 +5,15 @@ option csharp_namespace = "GPRCStreaming";
 package location_data;
 
 service LocationData {
-  rpc GetLocationData (GetLocationRequest) returns (stream GetLocationResponse);
-  rpc GetAllLocationData (GetAllLocationsRequest) returns (stream GetAllLocationsResponse);
+  rpc GetLocations (GetLocationsRequest) returns (stream GetLocationsResponse);
+  rpc GetAllLocations (GetAllLocationsRequest) returns (stream GetAllLocationsResponse);
 }
 
-message GetLocationRequest {
+message GetLocationsRequest {
   int32 dataLimit = 1;
 }
 
-message GetLocationResponse {
+message GetLocationsResponse {
   int32 latitudeE7 = 1;
   int32 longitudeE7 = 2;
 }

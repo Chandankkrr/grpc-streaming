@@ -21,7 +21,7 @@ namespace GPRCStreaming
         }
 
         [HttpGet("getLocationData")]
-        public async Task<IEnumerable<Location>> GetLocationData([FromQuery] GetLocationRequest request)
+        public async Task<IEnumerable<Location>> GetLocationData([FromQuery] GetLocationsRequest request)
         {
             var locationData = await ReadLocationData();
 
