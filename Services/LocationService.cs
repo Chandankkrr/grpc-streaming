@@ -1,10 +1,11 @@
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using Grpc.Core;
+using GrpcStreaming.Models;
 using Microsoft.Extensions.Logging;
-using System.IO;
-using System;
 
-namespace GPRCStreaming
+namespace GrpcStreaming.Services
 {
     public class LocationService : LocationData.LocationDataBase
     {
@@ -17,7 +18,8 @@ namespace GPRCStreaming
             _logger = logger;
         }
 
-        public override async Task GetLocations(GetLocationsRequest request, IServerStreamWriter<GetLocationsResponse> responseStream, ServerCallContext context)
+        public override async Task GetLocations(GetLocationsRequest request,
+            IServerStreamWriter<GetLocationsResponse> responseStream, ServerCallContext context)
         {
             try
             {
@@ -33,11 +35,12 @@ namespace GPRCStreaming
                 {
                     var item = locationData.Locations[i];
 
-                    await responseStream.WriteAsync(new GetLocationsResponse
-                    {
-                        LatitudeE7 = item.LatitudeE7,
-                        LongitudeE7 = item.LongitudeE7
-                    });
+                    await responseStream.WriteAsync(
+                        new GetLocationsResponse
+                        {
+                            LatitudeE7 = item.LatitudeE7,
+                            LongitudeE7 = item.LongitudeE7
+                        });
                 }
             }
             catch (Exception exception)
@@ -47,7 +50,8 @@ namespace GPRCStreaming
             }
         }
 
-        public override async Task GetAllLocations(GetAllLocationsRequest request, IServerStreamWriter<GetAllLocationsResponse> responseStream, ServerCallContext context)
+        public override async Task GetAllLocations(GetAllLocationsRequest request,
+            IServerStreamWriter<GetAllLocationsResponse> responseStream, ServerCallContext context)
         {
             _logger.LogInformation("Incoming request for GetAllLocationData");
 
@@ -56,11 +60,13 @@ namespace GPRCStreaming
 
             foreach (var item in locations)
             {
-                await responseStream.WriteAsync(new GetAllLocationsResponse
-                {
-                    LatitudeE7 = item.LatitudeE7,
-                    LongitudeE7 = item.LongitudeE7
-                });
+                await responseStream.WriteAsync(
+                    new GetAllLocationsResponse
+                    {
+                        LatitudeE7 = item.LatitudeE7,
+                        LongitudeE7 = item.LongitudeE7
+                    }
+                );
             }
         }
 

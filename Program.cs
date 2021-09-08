@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 
-namespace GPRCStreaming
+namespace GrpcStreaming
 {
     public class Program
     {
@@ -41,6 +41,10 @@ namespace GPRCStreaming
 
                     options.ListenAnyIP(8080, o => o.Protocols =
                         HttpProtocols.Http1);
+
+                    // options.ListenLocalhost(7000, o => o.Protocols = HttpProtocols.Http2);
+                    // options.ListenAnyIP(8080, o => o.Protocols =
+                    //     HttpProtocols.Http1);
                 });
 
                 webBuilder.UseStartup<Startup>();

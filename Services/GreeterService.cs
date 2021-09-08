@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
+using GPRCStreaming;
 using Grpc.Core;
 
-namespace GPRCStreaming
+namespace GrpcStreaming.Services
 {
     public class GreeterService : Greeter.GreeterBase
     {

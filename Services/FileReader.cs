@@ -1,9 +1,10 @@
 using System.IO;
 using System.Threading.Tasks;
+using GrpcStreaming.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace GPRCStreaming
+namespace GrpcStreaming.Services
 {
     public class FileReader
     {
@@ -18,16 +19,27 @@ namespace GPRCStreaming
 
         public async Task<RootLocation> ReadAllLinesAsync(string filePath)
         {
-            if (_locationData == null)
+            if (_locationData != null) return _locationData;
+            
+            var serializer = new JsonSerializer();
+
+            await using (var fileStream = File.Open(filePath, FileMode.Open))
+            using (var streamReader = new StreamReader(fileStream))
+            using (JsonReader reader = new JsonTextReader(streamReader))
             {
-                _logger.LogInformation($"Reading contents of {filePath} file");
-
-                var locationDataText = await File.ReadAllTextAsync(filePath);
-                _locationData = JsonConvert.DeserializeObject<RootLocation>(locationDataText);
-
-                _logger.LogInformation($"{_locationData.Locations.Count} records found");
+                while (await reader.ReadAsync())
+                {
+                    _logger.LogInformation("Reading contents of {FilePath} file", filePath);
+                    
+                    if (reader.TokenType == JsonToken.StartObject)
+                    {
+                        _locationData = serializer.Deserialize<RootLocation>(reader);
+                    }
+                }
+                
+                _logger.LogInformation("{Count} records found", _locationData!.Locations.Count.ToString());
             }
-
+            
             return _locationData;
         }
     }

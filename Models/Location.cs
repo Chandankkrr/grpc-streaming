@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace GPRCStreaming
+namespace GrpcStreaming.Models
 {
     public class Location
     {

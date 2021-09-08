@@ -2,19 +2,21 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GrpcStreaming.Models;
+using GrpcStreaming.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace GPRCStreaming
+namespace GrpcStreaming.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class LocationController : ControllerBase
     {
-        public readonly FileReader _fileReader;
-        public readonly ILogger<LocationService> _logger;
+        private readonly FileReader _fileReader;
+        private readonly ILogger<LocationController> _logger;
 
-        public LocationController(FileReader fileReader, ILogger<LocationService> logger)
+        public LocationController(FileReader fileReader, ILogger<LocationController> logger)
         {
             _fileReader = fileReader;
             _logger = logger;
